@@ -1,6 +1,6 @@
 {
   "name": "opencv-starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NPM Module - load opencvjs lib and create middle app part for better handling...",
   "main": "index.js",
   "scripts": {
