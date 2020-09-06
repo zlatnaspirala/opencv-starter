@@ -15,4 +15,10 @@
 
   npm publish
 
+  SOME UPDATE
+
+  npm version 1.0.1
+
+  npm publish
+
 ```
