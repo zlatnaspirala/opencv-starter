@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/zlatnaspirala/opencv-starter/issues"
   },
-  "homepage": "https://github.com/zlatnaspirala/opencv-starter#readme"
+  "homepage": "https://github.com/zlatnaspirala/opencv-starter#readme",
+  "dependencies": {
+    "webrtc-adapter": "^7.7.0"
+  }
 }
