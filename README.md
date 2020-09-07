@@ -12,21 +12,16 @@
 ### Proccedure from npm package ###
  On waiting , need browser part on nodejs ....
 
-```javascript
-
+```
   npm init
-
   npm publish
-
   SOME UPDATE
-
   npm version 1.0.1
-
   npm publish
-
 ```
 
 ### EXTERNAL LICENCE ###
 
   Source code for base class VideoProcessing used from =>
-  - https://codepen.io/huningxin/pen/wqBvRo
+  - https://codepen.io/huningxin/pen/wqBvRo [wip]
+  - https://codepen.io/huningxin/pen/EvmMYN [next]

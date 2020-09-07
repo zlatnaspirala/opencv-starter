@@ -167,13 +167,12 @@ export default class VideoProcessing {
     }
 
     let passThrough = gui.add(this.controls, 'passThrough').name(root.filters['passThrough']).onChange(() => {
-      console.log("OK")
+      this.controls.filter = "passThrough"
       closeLastFolder(null);
     });
 
     let colorConversion = gui.addFolder('Color Conversion');
     colorConversion.add(this.controls, 'gray').name(root.filters['gray']).onChange(() => {
-      // console.log("OK gray", this.controls)
       this.controls.filter = "gray"
       closeLastFolder(null);
     });
@@ -185,8 +184,8 @@ export default class VideoProcessing {
 
     let inRange = colorConversion.addFolder(root.filters['inRange'])
     inRange.domElement.onclick = () => {
-      closeLastFolder(inRange);
-      root.controls.inRange();
+      closeLastFolder(inRange)
+      root.controls.inRange()
     };
     inRange.add(root.controls, 'inRangeLow', 0, 255, 1).name('lower boundary')
     inRange.add(root.controls, 'inRangeHigh', 0, 255, 1).name('higher boundary')
@@ -198,6 +197,7 @@ export default class VideoProcessing {
 
     let threshold = thresholding.addFolder(this.filters['threshold'])
     threshold.domElement.onclick = () => {
+      this.controls.filter = "threshold"
       closeLastFolder(threshold)
       this.controls.threshold()
     };
@@ -245,12 +245,16 @@ export default class VideoProcessing {
     morphology.add(this.controls, 'morphologyBorderType', {'BORDER_CONSTANT': cv.BORDER_CONSTANT, 'BORDER_REPLICATE': cv.BORDER_REPLICATE, 'BORDER_REFLECT': cv.BORDER_REFLECT, 'BORDER_REFLECT_101': cv.BORDER_REFLECT_101}).name('boarder type');
 
     let gradients = gui.addFolder('Gradients')
-    let sobel = gradients.addFolder(this.filters['sobel']);
+    let sobel = gradients.addFolder(this.filters['sobel'])
+
     sobel.domElement.onclick = () => {
       closeLastFolder(sobel);
       this.controls.sobel();
-    };
-    sobel.add(this.controls, 'sobelSize', 3, 19, 1).name('kernel size').onChange(function(value) { if (value % 2 === 0) root.controls.sobelSize = value + 1;});
+    }
+
+    sobel.add(this.controls, 'sobelSize', 3, 19, 1).name('kernel size').onChange((value) => {
+      if (value % 2 === 0) root.controls.sobelSize = value + 1;
+    })
 
     gradients.add(this.controls, 'scharr').name(this.filters['scharr']).onChange(() => {
       closeLastFolder(null)
@@ -261,7 +265,11 @@ export default class VideoProcessing {
       closeLastFolder(laplacian);
       this.controls.laplacian();
     };
-    laplacian.add(this.controls, 'laplacianSize', 1, 19, 1).name('kernel size').onChange(function(value) { if (value % 2 === 0) root.controls.laplacianSize = value + 1;});
+    laplacian.add(this.controls, 'laplacianSize', 1, 19, 1).name('kernel size').onChange((value) => {
+
+      if (value % 2 === 0) root.controls.laplacianSize = value + 1;
+
+    })
 
     let canny = gui.addFolder(this.filters['canny'])
     canny.domElement.onclick = () => {
@@ -522,16 +530,16 @@ export default class VideoProcessing {
   }
 
   threshold(src) {
-    cv.threshold(src, dstC4, this.controls.thresholdValue, 200, cv.THRESH_BINARY);
-    return dstC4;
+    cv.threshold(src, this.dstC4, this.controls.thresholdValue, 200, cv.THRESH_BINARY);
+    return this.dstC4;
   }
 
   adaptiveThreshold(src) {
-    let mat = new cv.Mat(height, width, cv.CV_8U);
-    cv.cvtColor(src, mat, cv.COLOR_RGBA2GRAY);
-    cv.adaptiveThreshold(mat, dstC1, 200, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, Number(this.controls.adaptiveBlockSize), 2);
-    mat.delete();
-    return dstC1;
+    let mat = new cv.Mat(this.height, this.width, cv.CV_8U)
+    cv.cvtColor(src, mat, cv.COLOR_RGBA2GRAY)
+    cv.adaptiveThreshold(mat, this.dstC1, 200, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, Number(this.controls.adaptiveBlockSize), 2)
+    mat.delete()
+    return this.dstC1
   }
 
   gaussianBlur(src) {
