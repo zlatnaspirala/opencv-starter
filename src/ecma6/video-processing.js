@@ -115,12 +115,17 @@ export default class VideoProcessing {
       passThrough: function() { this.setFilter('passThrough'); },
       gray: function() { this.setFilter('gray'); },
       hsv: function() { this.setFilter('hsv'); },
-      inRange: function() { this.setFilter('inRange'); },
+      inRange: function() {
+        console.log("this.setFilter => ", this.setFilter)
+         this.setFilter('inRange')
+         console.log("this.filter => ", this.filter)
+
+      },
       inRangeLow: 75,
       inRangeHigh: 150,
       threshold: function() { this.setFilter('threshold'); },
       thresholdValue: 100,
-      adaptiveThreshold: function() { this.setFilter('adaptiveThreshold'); },
+      adaptiveThreshold: () => { this.setFilter('adaptiveThreshold'); },
       adaptiveBlockSize: 3,
       gaussianBlur: function() { this.setFilter('gaussianBlur'); },
       gaussianBlurSize: 7,
@@ -169,24 +174,26 @@ export default class VideoProcessing {
     let passThrough = gui.add(this.controls, 'passThrough').name(root.filters['passThrough']).onChange(() => {
       this.controls.filter = "passThrough"
       closeLastFolder(null);
-    });
+    })
 
     let colorConversion = gui.addFolder('Color Conversion');
     colorConversion.add(this.controls, 'gray').name(root.filters['gray']).onChange(() => {
       this.controls.filter = "gray"
       closeLastFolder(null);
-    });
+    })
 
     colorConversion.add(this.controls, 'hsv').name(root.filters['hsv']).onChange(() => {
       this.controls.filter = "hsv"
       closeLastFolder(null);
-    });
+    })
 
     let inRange = colorConversion.addFolder(root.filters['inRange'])
     inRange.domElement.onclick = () => {
       closeLastFolder(inRange)
+      this.controls.filter = "inRange"
       root.controls.inRange()
-    };
+    }
+
     inRange.add(root.controls, 'inRangeLow', 0, 255, 1).name('lower boundary')
     inRange.add(root.controls, 'inRangeHigh', 0, 255, 1).name('higher boundary')
 
@@ -206,6 +213,7 @@ export default class VideoProcessing {
     let adaptiveThreshold = thresholding.addFolder(this.filters['adaptiveThreshold'])
     adaptiveThreshold.domElement.onclick = () => {
       closeLastFolder(adaptiveThreshold);
+      this.controls.filter = "adaptiveThreshold"
       this.controls.adaptiveThreshold();
     };
     adaptiveThreshold.add(this.controls, 'adaptiveBlockSize', 3, 99, 1).name('block size').onChange((value) => { if (value % 2 === 0) this.controls.adaptiveBlockSize = value + 1;});
@@ -215,6 +223,7 @@ export default class VideoProcessing {
     let gaussianBlur = smoothing.addFolder(this.filters['gaussianBlur'])
     gaussianBlur.domElement.onclick = () => {
       closeLastFolder(gaussianBlur);
+      this.controls.filter = "gaussianBlur"
       this.controls.gaussianBlur();
     };
     gaussianBlur.add(this.controls, 'gaussianBlurSize', 7, 99, 1).name('kernel size').onChange((value) => { if (value % 2 === 0) this.controls.gaussianBlurSize = value + 1;});
@@ -228,28 +237,31 @@ export default class VideoProcessing {
 
     let bilateralFilter = smoothing.addFolder(this.filters['bilateralFilter']);
     bilateralFilter.domElement.onclick = () => {
-      closeLastFolder(bilateralFilter);
-      this.controls.bilateralFilter();
+      closeLastFolder(bilateralFilter)
+      this.controls.filter = "bilateralFilter"
+      this.controls.bilateralFilter()
     };
     bilateralFilter.add(this.controls, 'bilateralFilterDiameter', 1, 15, 1).name('diameter');
     bilateralFilter.add(this.controls, 'bilateralFilterSigma', 1, 255, 1).name('sigma')
 
-    let morphology = gui.addFolder('Morphology');
+    let morphology = gui.addFolder('Morphology')
     morphology.domElement.onclick = () => {
-      closeLastFolder(morphology);
-      this.controls.morphology();
+      closeLastFolder(morphology)
+      this.controls.filter = "morphology"
+      this.controls.morphology()
     };
     morphology.add(this.controls, 'morphologyOp', {'MORPH_ERODE': cv.MORPH_ERODE, 'MORPH_DILATE': cv.MORPH_DILATE, 'MORPH_OPEN ': cv.MORPH_OPEN, 'MORPH_CLOSE': cv.MORPH_CLOSE, 'MORPH_GRADIENT': cv.MORPH_GRADIENT, 'MORPH_TOPHAT': cv.MORPH_TOPHAT, 'MORPH_BLACKHAT': cv.MORPH_BLACKHAT}).name('operation');
     morphology.add(this.controls, 'morphologyShape', {'MORPH_RECT': cv.MORPH_RECT, 'MORPH_CROSS': cv.MORPH_CROSS, 'MORPH_ELLIPSE': cv.MORPH_ELLIPSE}).name('shape');
-    morphology.add(this.controls, 'morphologySize', 1, 15, 1).name('kernel size').onChange(function(value) { if (value % 2 === 0) this.controls.morphologySize = value + 1;});
+    morphology.add(this.controls, 'morphologySize', 1, 15, 1).name('kernel size').onChange(function(value) { if (value % 2 === 0) root.controls.morphologySize = value + 1;});
     morphology.add(this.controls, 'morphologyBorderType', {'BORDER_CONSTANT': cv.BORDER_CONSTANT, 'BORDER_REPLICATE': cv.BORDER_REPLICATE, 'BORDER_REFLECT': cv.BORDER_REFLECT, 'BORDER_REFLECT_101': cv.BORDER_REFLECT_101}).name('boarder type');
 
     let gradients = gui.addFolder('Gradients')
     let sobel = gradients.addFolder(this.filters['sobel'])
 
     sobel.domElement.onclick = () => {
-      closeLastFolder(sobel);
-      this.controls.sobel();
+      closeLastFolder(sobel)
+      this.controls.filter = "sobel"
+      this.controls.sobel()
     }
 
     sobel.add(this.controls, 'sobelSize', 3, 19, 1).name('kernel size').onChange((value) => {
@@ -258,23 +270,24 @@ export default class VideoProcessing {
 
     gradients.add(this.controls, 'scharr').name(this.filters['scharr']).onChange(() => {
       closeLastFolder(null)
+      this.controls.filter = "scharr"
     })
 
     let laplacian = gradients.addFolder(this.filters['laplacian'])
     laplacian.domElement.onclick = () => {
-      closeLastFolder(laplacian);
-      this.controls.laplacian();
-    };
+      closeLastFolder(laplacian)
+      this.controls.filter = "laplacian"
+      this.controls.laplacian()
+    }
     laplacian.add(this.controls, 'laplacianSize', 1, 19, 1).name('kernel size').onChange((value) => {
-
       if (value % 2 === 0) root.controls.laplacianSize = value + 1;
-
     })
 
     let canny = gui.addFolder(this.filters['canny'])
     canny.domElement.onclick = () => {
-      closeLastFolder(canny);
-      this.controls.canny();
+      closeLastFolder(canny)
+      this.controls.filter = "canny"
+      this.controls.canny()
     };
     canny.add(this.controls, 'cannyThreshold1', 1, 500, 1).name('threshold1');
     canny.add(this.controls, 'cannyThreshold2', 1, 500, 1).name('threshold2');
@@ -283,24 +296,28 @@ export default class VideoProcessing {
 
     let contours = gui.addFolder(this.filters['contours']);
     contours.domElement.onclick = () => {
-      closeLastFolder(contours);
-      root.controls.contours();
+      closeLastFolder(contours)
+      this.controls.filter = "contours"
+      root.controls.contours()
     };
     contours.add(root.controls, 'contoursMode', {'RETR_EXTERNAL': cv.RETR_EXTERNAL, 'RETR_LIST': cv.RETR_LIST, 'RETR_CCOMP': cv.RETR_CCOMP, 'RETR_TREE': cv.RETR_TREE}).name('mode');
     contours.add(root.controls, 'contoursMethod', {'CHAIN_APPROX_NONE': cv.CHAIN_APPROX_NONE, 'CHAIN_APPROX_SIMPLE': cv.CHAIN_APPROX_SIMPLE, 'CHAIN_APPROX_TC89_L1': cv.CHAIN_APPROX_TC89_L1, 'CHAIN_APPROX_TC89_KCOS': cv.CHAIN_APPROX_TC89_KCOS}).name('method');
 
     let histograms = gui.addFolder('Histograms');
-    histograms.add(root.controls, 'calcHist').name(root.filters['calcHist']).onChange(function() {
-      closeLastFolder(null);
+    histograms.add(root.controls, 'calcHist').name(root.filters['calcHist']).onChange(() => {
+      closeLastFolder(null)
+      this.controls.filter = "calcHist"
     })
-    histograms.add(this.controls, 'equalizeHist').name(root.filters['equalizeHist']).onChange(function() {
-      closeLastFolder(null);
+    histograms.add(this.controls, 'equalizeHist').name(root.filters['equalizeHist']).onChange(() => {
+      closeLastFolder(null)
+      this.controls.filter = "equalizeHist"
     });
 
     let backprojection = histograms.addFolder(root.filters['backprojection']);
     backprojection.domElement.onclick = () => {
-      closeLastFolder(backprojection);
-      root.controls.backprojection();
+      closeLastFolder(backprojection)
+      this.controls.filter = "backprojection"
+      root.controls.backprojection()
     };
     backprojection.add(root.controls, 'backprojectionRangeLow', 0, 255, 1).name('range low');
     backprojection.add(root.controls, 'backprojectionRangeHigh', 0, 255, 1).name('range high');
@@ -309,37 +326,37 @@ export default class VideoProcessing {
   backprojection(src) {
     if (this.lastFilter !== 'backprojection') {
       if (this.base instanceof cv.Mat)
-        this.base.delete();
-      this.base = src.clone();
+        this.base.delete()
+      this.base = src.clone()
       cv.cvtColor(this.base, this.base, cv.COLOR_RGB2HSV, 0)
     }
-    cv.cvtColor(src, this.dstC3, cv.COLOR_RGB2HSV, 0);
-    let baseVec = new cv.MatVector(), targetVec = new cv.MatVector();
-    baseVec.push_back(base); targetVec.push_back(this.dstC3);
-    let mask = new cv.Mat(), hist = new cv.Mat();
-    let channels = [0], histSize = [50];
+    cv.cvtColor(src, this.dstC3, cv.COLOR_RGB2HSV, 0)
+    let baseVec = new cv.MatVector(), targetVec = new cv.MatVector()
+    baseVec.push_back(this.base); targetVec.push_back(this.dstC3)
+    let mask = new cv.Mat(), hist = new cv.Mat()
+    let channels = [0], histSize = [50]
     let ranges;
     if (this.controls.backprojectionRangeLow < this.controls.backprojectionRangeHigh)
-      ranges = [this.controls.backprojectionRangeLow, this.controls.backprojectionRangeHigh];
+      ranges = [this.controls.backprojectionRangeLow, this.controls.backprojectionRangeHigh]
     else
       return src;
-    cv.calcHist(baseVec, channels, mask, hist, histSize, ranges);
-    cv.normalize(hist, hist, 0, 255, cv.NORM_MINMAX);
-    cv.calcBackProject(targetVec, channels, hist, dstC1, ranges, 1);
-    baseVec.delete();
-    targetVec.delete();
-    mask.delete();
-    hist.delete();
-    return dstC1;
+    cv.calcHist(baseVec, channels, mask, hist, histSize, ranges)
+    cv.normalize(hist, hist, 0, 255, cv.NORM_MINMAX)
+    cv.calcBackProject(targetVec, channels, hist, this.dstC1, ranges, 1)
+    baseVec.delete()
+    targetVec.delete()
+    mask.delete()
+    hist.delete()
+    return this.dstC1
   }
 
   erosion(src) {
-    let kernelSize = this.controls.erosionSize;
-    let kernel = cv.Mat.ones(kernelSize, kernelSize, cv.CV_8U);
-    let color = new cv.Scalar();
-    cv.erode(src, dstC4, kernel, {x: -1, y: -1}, 1, Number(this.controls.erosionBorderType), color);
+    let kernelSize = this.controls.erosionSize
+    let kernel = cv.Mat.ones(kernelSize, kernelSize, cv.CV_8U)
+    let color = new cv.Scalar()
+    cv.erode(src, this.dstC4, kernel, {x: -1, y: -1}, 1, Number(this.controls.erosionBorderType), color)
     kernel.delete();
-    return dstC4;
+    return this.dstC4;
   }
 
   dilation(src) {
@@ -352,18 +369,18 @@ export default class VideoProcessing {
   }
 
   morphology(src) {
-    let kernelSize = this.controls.morphologySize;
-    let kernel = cv.getStructuringElement(Number(this.controls.morphologyShape), {width: kernelSize, height: kernelSize});
-    let color = new cv.Scalar();
-    let op = Number(this.controls.morphologyOp);
+    let kernelSize = this.controls.morphologySize
+    let kernel = cv.getStructuringElement(Number(this.controls.morphologyShape), {width: kernelSize, height: kernelSize})
+    let color = new cv.Scalar()
+    let op = Number(this.controls.morphologyOp)
     let image = src;
     if (op === cv.MORPH_GRADIENT || op === cv.MORPH_TOPHAT || op === cv.MORPH_BLACKHAT) {
-      cv.cvtColor(src, dstC3, cv.COLOR_RGBA2RGB);
-      image = this.dstC3;
+      cv.cvtColor(src, this.dstC3, cv.COLOR_RGBA2RGB)
+      image = this.dstC3
     }
-    cv.morphologyEx(image, dstC4, op, kernel, {x: -1, y: -1}, 1, Number(this.controls.morphologyBorderType), color);
-    kernel.delete();
-    return dstC4;
+    cv.morphologyEx(image, this.dstC4, op, kernel, {x: -1, y: -1}, 1, Number(this.controls.morphologyBorderType), color)
+    kernel.delete()
+    return this.dstC4
   }
 
   processVideo = () => {
@@ -372,8 +389,7 @@ export default class VideoProcessing {
     this.vc.read(this.src)
     let result
 
-    console.log("...this.controls.filter...", this.controls.filter)
-    // console.log("...this.controls.this.gray...", this.gray)
+    // console.log("...this.controls.filter...", this.controls.filter)
     switch (this.controls.filter) {
       case 'passThrough': result = this.passThrough(this.src); break;
       case 'gray': result = this.gray(this.src); break;
@@ -426,49 +442,50 @@ export default class VideoProcessing {
   }
 
   contours(src) {
-    cv.cvtColor(src, dstC1, cv.COLOR_RGBA2GRAY);
-    cv.threshold(dstC1, dstC4, 120, 200, cv.THRESH_BINARY);
+    cv.cvtColor(src, this.dstC1, cv.COLOR_RGBA2GRAY);
+    cv.threshold(this.dstC1, this.dstC4, 120, 200, cv.THRESH_BINARY);
     let contours  = new cv.MatVector();
     let hierarchy = new cv.Mat();
-    cv.findContours(dstC4, contours, hierarchy, Number(this.controls.contoursMode), Number(this.controls.contoursMethod), {x: 0, y: 0});
+    cv.findContours(this.dstC4, contours, hierarchy, Number(this.controls.contoursMode), Number(this.controls.contoursMethod), {x: 0, y: 0});
     this.dstC3.delete();
-    this.dstC3 = cv.Mat.ones(this.height, width, cv.CV_8UC3);
-    for (let i = 0; i<contours.size(); ++i)
+    this.dstC3 = cv.Mat.ones(this.height, this.width, cv.CV_8UC3);
+    for (let i = 0; i < contours.size(); ++i)
     {
-      let color = contoursColor[i];
-      cv.drawContours(dstC3, contours, i, color, 1, cv.LINE_8, hierarchy);
+      let color = this.contoursColor[i]
+      cv.drawContours(this.dstC3, contours, i, color, 1, cv.LINE_8, hierarchy)
     }
-    contours.delete(); hierarchy.delete();
-    return dstC3;
+    contours.delete()
+    hierarchy.delete()
+    return this.dstC3
   }
 
   calcHist(src) {
-    cv.cvtColor(src, dstC1, cv.COLOR_RGBA2GRAY);
-    let srcVec = new cv.MatVector();
-    srcVec.push_back(dstC1);
-    let scale = 2;
-    let channels = [0], histSize = [src.cols/scale], ranges = [0,255];
-    let hist = new cv.Mat(), mask = new cv.Mat(), color = new cv.Scalar(0xfb, 0xca, 0x04, 0xff);
-    cv.calcHist(srcVec, channels, mask, hist, histSize, ranges);
+    cv.cvtColor(src, this.dstC1, cv.COLOR_RGBA2GRAY)
+    let srcVec = new cv.MatVector()
+    srcVec.push_back(this.dstC1)
+    let scale = 2
+    let channels = [0], histSize = [src.cols/scale], ranges = [0,255]
+    let hist = new cv.Mat(), mask = new cv.Mat(), color = new cv.Scalar(0xfb, 0xca, 0x04, 0xff)
+    cv.calcHist(srcVec, channels, mask, hist, histSize, ranges)
     let result = cv.minMaxLoc(hist, mask);
     var max = result.maxVal;
-    cv.cvtColor(dstC1, dstC4, cv.COLOR_GRAY2RGBA);
+    cv.cvtColor(this.dstC1, this.dstC4, cv.COLOR_GRAY2RGBA);
     // draw histogram on src
     for(var i = 0; i < histSize[0]; i++)
     {
         var binVal = hist.data32F[i] * src.rows / max;
-        cv.rectangle(dstC4, {x: i * scale, y: src.rows - 1}, {x: (i + 1) * scale - 1, y: src.rows - binVal/3}, color, cv.FILLED);
+        cv.rectangle(this.dstC4, {x: i * scale, y: src.rows - 1}, {x: (i + 1) * scale - 1, y: src.rows - binVal/3}, color, cv.FILLED);
     }
-    srcVec.delete();
-    mask.delete();
-    hist.delete();
-    return dstC4;
+    srcVec.delete()
+    mask.delete()
+    hist.delete()
+    return this.dstC4
   }
 
   equalizeHist(src) {
-    cv.cvtColor(src, dstC1, cv.COLOR_RGBA2GRAY, 0);
-    cv.equalizeHist(dstC1, dstC1);
-    return dstC1;
+    cv.cvtColor(src, this.dstC1, cv.COLOR_RGBA2GRAY, 0);
+    cv.equalizeHist(this.dstC1, this.dstC1);
+    return this.dstC1
   }
 
   laplacian(src) {
@@ -482,7 +499,6 @@ export default class VideoProcessing {
   startVideoProcessing() {
 
     if (!this.streaming) { console.warn("Please startup your webcam"); return; }
-    console.warn("startVideoProcessing", this.stopVideoProcessing)
     this.stopVideoProcessing()
     this.src = new cv.Mat(this.height, this.width, cv.CV_8UC4)
     this.dstC1 = new cv.Mat(this.height, this.width, cv.CV_8UC1)
@@ -493,21 +509,17 @@ export default class VideoProcessing {
   }
 
   passThrough(src) {
-    return src;
+    return src
   }
 
   gray(src) {
-    console.log("WORK OR NOT src ", src)
-    console.log("WORK OR NOT cv", cv)
-    cv.cvtColor(src, this.dstC1, cv.COLOR_RGBA2GRAY);
+    cv.cvtColor(src, this.dstC1, cv.COLOR_RGBA2GRAY)
     return this.dstC1;
-    // cv.cvtColor(src, dstC1, cv.COLOR_RGBA2GRAY);
-    // return dstC1;
   }
 
   hsv(src) {
-    cv.cvtColor(src, this.dstC3, cv.COLOR_RGBA2RGB);
-    cv.cvtColor(this.dstC3, this.dstC3, cv.COLOR_RGB2HSV);
+    cv.cvtColor(src, this.dstC3, cv.COLOR_RGBA2RGB)
+    cv.cvtColor(this.dstC3, this.dstC3, cv.COLOR_RGB2HSV)
     return this.dstC3;
   }
 
@@ -522,11 +534,11 @@ export default class VideoProcessing {
     let lowScalar = new cv.Scalar(lowValue, lowValue, lowValue, 255);
     let highValue = this.controls.inRangeHigh;
     let highScalar = new cv.Scalar(highValue, highValue, highValue, 255);
-    let low = new cv.Mat(height, width, src.type(), lowScalar);
-    let high = new cv.Mat(height, width, src.type(), highScalar);
-    cv.inRange(src, low, high, dstC1);
+    let low = new cv.Mat(this.height, this.width, src.type(), lowScalar);
+    let high = new cv.Mat(this.height, this.width, src.type(), highScalar);
+    cv.inRange(src, low, high, this.dstC1);
     low.delete(); high.delete();
-    return dstC1;
+    return this.dstC1;
   }
 
   threshold(src) {
@@ -543,37 +555,37 @@ export default class VideoProcessing {
   }
 
   gaussianBlur(src) {
-    cv.GaussianBlur(src, dstC4, {width: this.controls.gaussianBlurSize, height: this.controls.gaussianBlurSize}, 0, 0, cv.BORDER_DEFAULT);
-    return dstC4;
+    cv.GaussianBlur(src, this.dstC4, {width: this.controls.gaussianBlurSize, height: this.controls.gaussianBlurSize}, 0, 0, cv.BORDER_DEFAULT)
+    return this.dstC4
   }
 
   bilateralFilter(src) {
-    let mat = new cv.Mat(height, width, cv.CV_8UC3);
+    let mat = new cv.Mat(this.height, this.width, cv.CV_8UC3);
     cv.cvtColor(src, mat, cv.COLOR_RGBA2RGB);
-    cv.bilateralFilter(mat, dstC3, this.controls.bilateralFilterDiameter, this.controls.bilateralFilterSigma, this.controls.bilateralFilterSigma, cv.BORDER_DEFAULT);
+    cv.bilateralFilter(mat, this.dstC3, this.controls.bilateralFilterDiameter, this.controls.bilateralFilterSigma, this.controls.bilateralFilterSigma, cv.BORDER_DEFAULT);
     mat.delete();
-    return dstC3;
+    return this.dstC3;
   }
 
   medianBlur(src) {
-    cv.medianBlur(src, dstC4, this.controls.medianBlurSize);
-    return dstC4;
+    cv.medianBlur(src, this.dstC4, this.controls.medianBlurSize);
+    return this.dstC4;
   }
 
   sobel(src) {
-    var mat = new cv.Mat(height, width, cv.CV_8UC1);
+    var mat = new cv.Mat(this.height, this.width, cv.CV_8UC1);
     cv.cvtColor(src, mat, cv.COLOR_RGB2GRAY, 0);
-    cv.Sobel(mat, dstC1, cv.CV_8U, 1, 0, this.controls.sobelSize, 1, 0, cv.BORDER_DEFAULT);
+    cv.Sobel(mat, this.dstC1, cv.CV_8U, 1, 0, this.controls.sobelSize, 1, 0, cv.BORDER_DEFAULT);
     mat.delete();
-    return dstC1;
+    return this.dstC1;
   }
 
   scharr(src) {
-    var mat = new cv.Mat(height, width, cv.CV_8UC1);
+    var mat = new cv.Mat(this.height, this.width, cv.CV_8UC1);
     cv.cvtColor(src, mat, cv.COLOR_RGB2GRAY, 0);
-    cv.Scharr(mat, dstC1, cv.CV_8U, 1, 0, 1, 0, cv.BORDER_DEFAULT);
+    cv.Scharr(mat, this.dstC1, cv.CV_8U, 1, 0, 1, 0, cv.BORDER_DEFAULT);
     mat.delete();
-    return dstC1;
+    return this.dstC1;
   }
 
 }

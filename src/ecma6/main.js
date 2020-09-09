@@ -1,12 +1,11 @@
 
-import { asyncLoad } from './loader.js'
-import VideoProcessing from './video-processing.js'
+import VideoProcessing from "./video-processing.js"
 
 export default class CvStarter {
 
   constructor(options) {
 
-    console.info("----------------------")
+    console.info("-------------------------------------------------------")
     console.info("CvStarter constructor.")
 
     if (typeof options !== "undefined") {
@@ -14,13 +13,14 @@ export default class CvStarter {
         // Run Video processing async
         let vp = new VideoProcessing()
         console.info("vp object => ", vp)
+        window.vp = vp
       }
     }
 
     this.cv = window.cv
     console.info("cv object => ", this.cv)
     console.info("adapter => ", window.adapter)
-    console.info("----------------------")
+    console.info("-------------------------------------------------------")
 
   }
 

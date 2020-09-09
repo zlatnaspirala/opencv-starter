@@ -23,10 +23,10 @@ export function asyncLoad(path, callback) {
 
 export var cvjs = function(cvjsCallback) {
 
-  asyncLoad('../../node_modules/webrtc-adapter/out/adapter.js', () => {
-    asyncLoad('../lib/stats.js', () => {
-      asyncLoad('../lib/data-gui.js', () => {
-        asyncLoad('../lib/opencv-3.4.0.js', cvjsCallback)
+  asyncLoad("../../node_modules/webrtc-adapter/out/adapter.js", () => {
+    asyncLoad("../lib/stats.js", () => {
+      asyncLoad("../lib/data-gui.js", () => {
+        asyncLoad("../lib/opencv-3.4.0.js", cvjsCallback)
       })
     })
   })

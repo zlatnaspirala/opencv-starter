@@ -4,6 +4,7 @@
   "description": "NPM Module - load opencvjs lib and create middle app part for better handling...",
   "main": "index.js",
   "scripts": {
+    "format": "eslint ./src/ecma6/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/zlatnaspirala/opencv-starter#readme",
   "dependencies": {
+    "eslint": "^7.8.1",
     "webrtc-adapter": "^7.7.0"
   }
 }
