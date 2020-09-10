@@ -202,7 +202,6 @@ export default class VideoProcessing {
     //root.startVideoProcessing()
     //}, 1500)
 
-
   }
 
   initUI() {
