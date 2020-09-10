@@ -31,9 +31,6 @@ export default class CvStarter {
         }
 
         // Run Video processing async
-
-
-
         console.info("vp object => ", vp)
         window.vp = vp
 
