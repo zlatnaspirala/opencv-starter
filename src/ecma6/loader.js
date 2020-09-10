@@ -21,7 +21,7 @@ export function asyncLoad(path, callback) {
 
 }
 
-export var cvjs = function(cvjsCallback) {
+export var cvjsLoader = function(cvjsCallback) {
 
   asyncLoad("../../node_modules/webrtc-adapter/out/adapter.js", () => {
     asyncLoad("../lib/stats.js", () => {
@@ -32,5 +32,3 @@ export var cvjs = function(cvjsCallback) {
   })
 
 }
-
-window.cvjs = cvjs

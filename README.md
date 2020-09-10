@@ -9,6 +9,29 @@
  - Run program on:
    `src\ecma6\index.html`
 
+
+### About running ###
+
+ 
+ Must be script type module.
+
+```js
+  import { cvjsLoader, asyncLoad } from "./loader.js"
+  import CvStarter from './main.js'
+
+  cvjsLoader(function() {
+
+    // `opencvjs` is ready for use.
+
+    const options = {
+      videoProcessing: true
+    }
+
+    let cvStarter = new CvStarter(options)
+
+  })
+```
+
 ### Proccedure from npm package ###
  On waiting , need browser part on nodejs ....
 

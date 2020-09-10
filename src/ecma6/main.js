@@ -9,12 +9,39 @@ export default class CvStarter {
     console.info("CvStarter constructor.")
 
     if (typeof options !== "undefined") {
-      if (typeof options.videoProcessing !== "undefined") {
+
+      if (typeof options.videoProcessing !== "undefined" &&
+          options.videoProcessing === true) {
+
+        var optionsVideoProcessing = {
+          injectVideo: null,
+          injectCanvas: null,
+        }
+
+        let vp
+
+        if (typeof options.injectVideo !== "undefined") {
+
+          optionsVideoProcessing.injectVideo = options.injectVideo
+          vp = new VideoProcessing(optionsVideoProcessing)
+          setTimeout(()=> {vp.injectVideo(options.injectVideo)}, 1000)
+
+        } else {
+          vp = new VideoProcessing(optionsVideoProcessing)
+        }
+
         // Run Video processing async
-        let vp = new VideoProcessing()
+
+
+
         console.info("vp object => ", vp)
         window.vp = vp
+
+      } else if (typeof options.faceDetect !== "undefined" &&
+                 options.faceDetect === true) {
+        // test
       }
+
     }
 
     this.cv = window.cv

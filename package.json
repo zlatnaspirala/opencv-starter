@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "format": "eslint ./src/ecma6/*.js",
+    "fix": "eslint ./src/ecma6/*.js --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
