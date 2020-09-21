@@ -18,8 +18,8 @@ export default class VideoProcessing {
     console.log("VideoProcessing : options => ", options)
 
     // In this case, We set width 320, and the height will be computed based on the input stream.
-    this.width = 320
-    this.height = 320
+    this.width = 640
+    this.height = 480
 
     // whether this.streaming video from the camera.
     this.streaming = false
