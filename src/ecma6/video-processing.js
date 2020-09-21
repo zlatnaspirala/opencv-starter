@@ -17,6 +17,9 @@ export default class VideoProcessing {
 
     console.log("VideoProcessing : options => ", options)
 
+    // default
+    this.canvasOutputFlagStr = "canvasOutput"
+
     // In this case, We set width 320, and the height will be computed based on the input stream.
     this.width = 640
     this.height = 480
@@ -29,9 +32,16 @@ export default class VideoProcessing {
       // Default
       this.video = document.getElementById("video")
     } else {
-      console.log(">>>>>>options.injectVideo>>>>>", options.injectVideo)
+      console.log("VideoProcessing injectVideo => ", options.injectVideo)
       this.video = options.injectVideo
       // this.injectVideo(options.injectVideo)
+    }
+
+    if (options.injectCanvas !== 'undefined') {
+      this.canvasOutputFlagStr = options.injectCanvas
+      console.log("VideoProcessing injectCanvas =>", options.injectCanvas)
+    } else {
+      console.error("VideoProcessing will use default canvas id =>", this.canvasOutputFlagStr)
     }
 
     this.stream = null
@@ -119,7 +129,7 @@ export default class VideoProcessing {
         default: result = this.passThrough(this.src)
         }
 
-        cv.imshow("canvasOutput", result)
+        cv.imshow(this.canvasOutputFlagStr, result)
 
       }
 
@@ -501,7 +511,7 @@ export default class VideoProcessing {
   stopCamera() {
     if (!this.streaming) return
     this.stopVideoProcessing()
-    document.getElementById("canvasOutput").getContext("2d").clearRect(0, 0, this.width, this.height)
+    document.getElementById(this.canvasOutputFlagStr).getContext("2d").clearRect(0, 0, this.width, this.height)
     this.video.pause()
     this.video.srcObject=null
     this.stream.getVideoTracks()[0].stop()
