@@ -22,7 +22,14 @@ export default class CvStarter {
 
         if (typeof options.injectVideo !== "undefined") {
 
+          if (typeof options.injectCanvas === 'undefined') {
+            // test
+            console.error("For now injectCanvas is required.")
+          }
+
           optionsVideoProcessing.injectVideo = options.injectVideo
+          optionsVideoProcessing.injectCanvas = options.injectCanvas
+
           vp = new VideoProcessing(optionsVideoProcessing)
           setTimeout(()=> {vp.injectVideo(options.injectVideo)}, 1000)
 
