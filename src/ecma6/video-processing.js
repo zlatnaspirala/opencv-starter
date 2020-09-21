@@ -208,7 +208,7 @@ export default class VideoProcessing {
 
     var root = this
 
-    document.getElementById("container").appendChild(this.stats.domElement)
+    document.getElementById("vp-debug").appendChild(this.stats.domElement)
 
     this.controls = {
       filter: "passThrough",
