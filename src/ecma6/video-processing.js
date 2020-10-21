@@ -275,6 +275,7 @@ export default class VideoProcessing {
 
     let gui = new dat.GUI({ autoPlace: false, })
     let guiContainer = document.getElementById("guiContainer")
+    guiContainer.innerHTML = ""
     guiContainer.appendChild(gui.domElement)
 
     let lastFolder = null

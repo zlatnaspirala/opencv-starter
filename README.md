@@ -10,9 +10,12 @@
    `src\ecma6\index.html`
 
 
+![screenshot](https://github.com/zlatnaspirala/opencv-starter/blob/master/screenshot.png)
+![screenshot](https://github.com/zlatnaspirala/opencv-starter/blob/master/alternative-youtube.png)
+
 ### About running ###
 
- 
+
  Must be script type module.
 
 ```js
