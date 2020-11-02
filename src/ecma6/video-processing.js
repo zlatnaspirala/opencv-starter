@@ -283,7 +283,7 @@ export default class VideoProcessing {
       morphologyBorderType: cv.BORDER_CONSTANT,
     }
 
-    if (typeof options.ignoreDataGui === true) {
+    if (options.ignoreDataGui === true) {
       return;
     }
 
