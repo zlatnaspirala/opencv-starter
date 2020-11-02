@@ -11,8 +11,18 @@ export default class VideoProcessing {
       options = {
         injectVideo: null,
         injectCanvas: null,
-        // video : HTMLVideo element
+        dim: { width: 320 , height: 240},
+        ignoreDataGui: true
       }
+    }
+
+    if (typeof options.dim === 'undefined') {
+        options.dim = { width: 320 , height: 240}
+    }
+
+    if (typeof options.ignoreDataGui === 'undefined') {
+      // Default
+      options.ignoreDataGui = true;
     }
 
     console.log("VideoProcessing : options => ", options)
@@ -21,8 +31,8 @@ export default class VideoProcessing {
     this.canvasOutputFlagStr = "canvasOutput"
 
     // In this case, We set width 320, and the height will be computed based on the input stream.
-    this.width = 640
-    this.height = 480
+    this.width = options.dim.width
+    this.height = options.dim.height
 
     // whether this.streaming video from the camera.
     this.streaming = false
@@ -214,7 +224,7 @@ export default class VideoProcessing {
 
   }
 
-  initUI() {
+  initUI(options) {
 
     var root = this
 
@@ -271,6 +281,10 @@ export default class VideoProcessing {
       morphologyOp: cv.MORPH_ERODE,
       morphologySize: 5,
       morphologyBorderType: cv.BORDER_CONSTANT,
+    }
+
+    if (options.ignoreDataGui === true) {
+      return;
     }
 
     let gui = new dat.GUI({ autoPlace: false, })
