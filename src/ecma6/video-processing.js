@@ -155,7 +155,7 @@ export default class VideoProcessing {
 
     console.log("VideoProcessing class instance is ready.")
 
-    this.initUI()
+    this.initUI(options)
 
     if (options.injectVideo === null) {
       this.startCamera()
@@ -283,7 +283,7 @@ export default class VideoProcessing {
       morphologyBorderType: cv.BORDER_CONSTANT,
     }
 
-    if (options.ignoreDataGui === true) {
+    if (typeof options.ignoreDataGui === true) {
       return;
     }
 
