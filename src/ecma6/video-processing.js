@@ -231,7 +231,7 @@ export default class VideoProcessing {
     document.getElementById("vp-debug").appendChild(this.stats.domElement)
 
     this.controls = {
-      filter: "passThrough",
+      filter: "gray",
       setFilter: (filter) => {
         this.filter = filter
         root.filterName.innerHTML = this.filters[filter]

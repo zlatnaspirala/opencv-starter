@@ -22,7 +22,7 @@ export default class CvStarter {
 
         if (typeof options.injectVideo !== "undefined") {
 
-          if (typeof options.injectCanvas === 'undefined') {
+          if (typeof options.injectCanvas === "undefined") {
             // test
             console.error("For now injectCanvas is required.")
           }

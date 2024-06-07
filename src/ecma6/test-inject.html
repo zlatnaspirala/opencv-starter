@@ -22,20 +22,17 @@
       <div class="invisible">
         <video id="my-video" class="hidden">Your browser does not support the video tag.</video>
       </div>
+			<canvas id="ai-canvas"> </canvas>
     </div>
 
     <script type="module">
-
-
       import { cvjsLoader, asyncLoad } from "./loader.js"
       import CvStarter from './main.js'
-
       var externalVideoStream = null,
           externalVideo = document.getElementById("my-video"),
           STREAM = null
 
       function someExternalVideo() {
-
         navigator.mediaDevices.getUserMedia({video: true, audio: false,})
           .then((s) => {
             STREAM = s
@@ -47,21 +44,19 @@
           })
 
         externalVideo.addEventListener("canplay", () => {
-
           cvjsLoader(function() {
             // `opencvjs` is ready for use.
             const options = {
               videoProcessing: true,
-              injectVideo: externalVideo
+              injectVideo: externalVideo,
+							injectCanvas: document.getElementById('ai-canvas')
             }
             let cvStarter = new CvStarter(options)
           })
-
         }, false)
       }
 
       someExternalVideo()
-
     </script>
 
   </body>
